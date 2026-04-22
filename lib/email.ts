@@ -24,6 +24,7 @@ type EventUpdateInput = {
   venue: string;
   updateType: "updated" | "cancelled";
   updateSummary?: string;
+  isRepublish?: boolean;
 };
 
 function getEmailClient() {
@@ -121,13 +122,21 @@ export async function sendRegistrationDecisionEmail(input: RegistrationDecisionI
 
 export async function sendEventUpdateEmail(input: EventUpdateInput) {
   const cancelled = input.updateType === "cancelled";
-  const subject = cancelled
-    ? `Event cancelled: ${input.eventTitle}`
-    : `Event update: ${input.eventTitle}`;
+  const republished = input.isRepublish === true;
 
-  const body = cancelled
-    ? "This event has been cancelled by the organizer."
-    : "The organizer has updated event details. Please review the latest information below.";
+  let subject: string;
+  let body: string;
+
+  if (cancelled) {
+    subject = `Event cancelled: ${input.eventTitle}`;
+    body = `<strong>${input.eventTitle}</strong> has been cancelled by the organizer. We apologize for any inconvenience caused.`;
+  } else if (republished) {
+    subject = `Great news! ${input.eventTitle} is happening again`;
+    body = `Great news! <strong>${input.eventTitle}</strong> is happening again! The event details have been updated below.`;
+  } else {
+    subject = `Event update: ${input.eventTitle}`;
+    body = "The organizer has updated event details. Please review the latest information below.";
+  }
 
   await sendEmail({
     to: input.attendeeEmail,
@@ -136,16 +145,15 @@ export async function sendEventUpdateEmail(input: EventUpdateInput) {
       <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;">
         <h2 style="margin:0 0 12px;">Hi ${input.attendeeName},</h2>
         <p>${body}</p>
-        <p style="margin:16px 0 0;"><strong>Event details</strong></p>
+        ${!cancelled ? `<p style="margin:16px 0 0;"><strong>Event details</strong></p>
         <ul style="padding-left:18px;">
-          <li>Title: ${input.eventTitle}</li>
           <li>Date: ${formatDate(input.eventDate)}</li>
           <li>Venue: ${input.venue}</li>
         </ul>
-        ${input.updateSummary ? `<p><strong>What changed:</strong> ${input.updateSummary}</p>` : ""}
+        ${!republished && input.updateSummary ? `<p><strong>What changed:</strong> ${input.updateSummary}</p>` : ""}` : ""}
         <p style="margin-top:18px;">Regards,<br/>EventForge Team</p>
       </div>
     `,
-    text: `Hi ${input.attendeeName},\n\n${body}\n\nEvent details:\n- Title: ${input.eventTitle}\n- Date: ${formatDate(input.eventDate)}\n- Venue: ${input.venue}${input.updateSummary ? `\n- What changed: ${input.updateSummary}` : ""}\n\nRegards,\nEventForge Team`,
+    text: `Hi ${input.attendeeName},\n\n${body.replace(/<[^>]*>/g, '')}${!cancelled ? `\n\nEvent details:\n- Date: ${formatDate(input.eventDate)}\n- Venue: ${input.venue}${!republished && input.updateSummary ? `\n- What changed: ${input.updateSummary}` : ""}` : ""}\n\nRegards,\nEventForge Team`,
   });
 }

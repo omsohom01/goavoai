@@ -121,6 +121,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const attendees = await Registration.find({ eventId: event._id }).select("name email phone");
     const updateType = event.status === "cancelled" ? "cancelled" : "updated";
     const updateSummary = changedFields.join(", ");
+    const isRepublish = previous.status === "cancelled" && event.status !== "cancelled";
 
     await Promise.all(
       attendees.map(async (attendee) => {
@@ -133,6 +134,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
             venue: event.venue,
             updateType,
             updateSummary,
+            isRepublish,
           });
         } catch (emailError) {
           console.error("Event update email error:", emailError);

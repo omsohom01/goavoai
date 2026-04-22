@@ -11,6 +11,23 @@ type EventFormProps = {
   template?: EventTemplate;
 };
 
+// Helper function to get minimum datetime (current time rounded up to next minute)
+function getMinDateTime(): string {
+  const now = new Date();
+  // Round up to next minute
+  now.setSeconds(0, 0);
+  now.setMinutes(now.getMinutes() + 1);
+  
+  // Format as YYYY-MM-DDTHH:mm for datetime-local input
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const date = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  
+  return `${year}-${month}-${date}T${hours}:${minutes}`;
+}
+
 export default function EventForm({ initial, template }: EventFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -83,6 +100,7 @@ export default function EventForm({ initial, template }: EventFormProps) {
       <input
         name="dateTime"
         type="datetime-local"
+        min={getMinDateTime()}
         defaultValue={initial ? new Date(initial.dateTime).toISOString().slice(0, 16) : ""}
         className="rounded-xl border border-slate-200 px-3 py-2 text-sm"
         required
