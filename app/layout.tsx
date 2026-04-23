@@ -3,6 +3,7 @@ import { Inter, Montserrat, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -41,6 +42,7 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} ${montserrat.variable} ${rusticRoadway.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+        <Navbar />
         {children}
         <Toaster position="top-right" richColors />
       </body>

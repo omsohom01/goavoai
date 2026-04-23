@@ -1,13 +1,9 @@
 import type { ReactNode } from "react";
-import Sidebar from "@/components/Sidebar";
-import TopBar from "@/components/TopBar";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <main className="gradient-shell min-h-screen md:flex">
-      <Sidebar />
-      <section className="w-full p-4 md:p-8">
-        <TopBar />
+    <main className="gradient-shell min-h-screen pt-24">
+      <section className="mx-auto w-full max-w-7xl px-4 md:px-8">
         {children}
       </section>
     </main>
