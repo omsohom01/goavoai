@@ -81,7 +81,6 @@ export async function sendRegistrationConfirmationEmail(input: RegistrationConfi
     <EvexaEmailTemplate
       attendeeName={input.attendeeName}
       heading={subject}
-      eventHeading={input.eventTitle}
       bodyParagraphs={[
         `Thanks for registering for ${input.eventTitle}.`,
         statusLine
@@ -118,7 +117,6 @@ export async function sendRegistrationDecisionEmail(input: RegistrationDecisionI
     <EvexaEmailTemplate
       attendeeName={input.attendeeName}
       heading={approved ? "You're Approved!" : "Application Update"}
-      eventHeading={input.eventTitle}
       bodyParagraphs={[body]}
       eventDetails={[{ label: "Title", value: input.eventTitle }]}
       type={approved ? "happy" : "sad"}
@@ -155,7 +153,6 @@ export async function sendEventUpdateEmail(input: EventUpdateInput) {
     <EvexaEmailTemplate
       attendeeName={input.attendeeName}
       heading={cancelled ? "Event Cancelled Update" : "Event Update"}
-      eventHeading={input.eventTitle}
       bodyParagraphs={[
         body,
         ...(!republished && input.updateSummary ? [`What changed: ${input.updateSummary}`] : [])
