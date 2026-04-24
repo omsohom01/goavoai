@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DarkVeil from "../DarkVeil";
+import GridBackground from "../GridBackground";
 
 
 const Hero = () => {
@@ -54,6 +55,7 @@ const Hero = () => {
       className="relative isolate overflow-hidden "
       style={{ background: "linear-gradient(160deg, #ffffff 70%, #f0fdf4 100%)" }}
     >
+      <GridBackground className="absolute inset-0 z-0" />
       {/* Noise texture overlay */}
       <div
         aria-hidden="true"

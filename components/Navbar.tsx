@@ -37,25 +37,26 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-6 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 px-4">
-      <div className="flex h-14 items-center justify-between rounded-full border border-white/10 bg-black/70 px-4 backdrop-blur-xl md:px-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+    <nav className="fixed top-2 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 px-4 border ">
+      <div className="flex h-14 items-center justify-between rounded-full border border-slate-600/60 bg-white/80 px-4 backdrop-blur-xl md:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
-          <div className="relative h-7 w-7 overflow-hidden rounded-lg">
+          <div className="relative h-7 w-7 overflow-hidden rounded-lg invert">
             <Image
               src="/logo.png"
               alt="Evexa Logo"
               fill
+              sizes="28px"
               className="object-contain"
             />
           </div>
-          <span className="font-mono text-sm font-bold uppercase tracking-[0.2em] text-white">
+          <span className="font-rustic text-sm font-bold uppercase tracking-[0.2em] text-slate-900">
             Evexa
           </span>
         </Link>
 
         {/* Center Links - Desktop */}
-        <div className="hidden items-center gap-1 rounded-full border border-white/5 bg-white/5 p-1 md:flex">
+        <div className="hidden items-center gap-1 rounded-full border border-slate-200/50 bg-slate-200/50 p-1 md:flex">
           {navItems.map((item) => {
             const active = pathname === item.href;
             return (
@@ -63,10 +64,10 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative rounded-full px-5 py-1.5 text-[13px] font-medium transition-all duration-300",
+                  "font-clash relative rounded-full px-5 py-1.5 text-[13px] font-medium transition-all duration-300",
                   active
-                    ? "bg-white text-black shadow-lg"
-                    : "text-white/60 hover:text-white"
+                    ? "bg-slate-900 text-white shadow-sm border border-slate-200"
+                    : "text-slate-600 hover:text-slate-900"
                 )}
               >
                 {item.label}
@@ -79,9 +80,9 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-[13px] font-semibold text-black transition-all hover:bg-green-500 hover:text-white"
+            className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-1.5 text-[13px] font-semibold text-white transition-all duration-300 hover:bg-slate-300/40 hover:text-black"
           >
-            <span className="hidden sm:inline">Logout</span>
+            <span className="font-clash hidden sm:inline">Logout</span>
             <LogOut className="h-3.5 w-3.5" />
           </button>
         </div>
@@ -89,7 +90,7 @@ export default function Navbar() {
 
       {/* Center Links - Mobile pill underneath or just centered */}
       <div className="mt-3 flex justify-center md:hidden">
-        <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/80 p-1 backdrop-blur-md shadow-xl">
+        <div className="flex items-center gap-1 rounded-full border border-slate-200 bg-white/90 p-1 backdrop-blur-md shadow-lg">
           {navItems.map((item) => {
             const active = pathname === item.href;
             return (
@@ -99,8 +100,8 @@ export default function Navbar() {
                 className={cn(
                   "rounded-full px-4 py-1.5 text-xs font-medium transition-all",
                   active
-                    ? "bg-white text-black"
-                    : "text-white/50 hover:text-white"
+                    ? "bg-slate-900 text-white"
+                    : "text-slate-500 hover:text-slate-900"
                 )}
               >
                 {item.label}

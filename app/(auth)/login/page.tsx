@@ -136,8 +136,11 @@ export default function LoginPage() {
       </div>
 
       {/* ── RIGHT SIDE — Form ── */}
-      <div className="flex w-full flex-col items-center justify-center bg-white lg:w-[55%]">
-        <div className="w-full max-w-md px-8 py-8 space-y-8">
+      <div className="relative flex w-full flex-col items-center justify-center bg-white lg:w-[55%]">
+        {/* Background Grid */}
+        <div className="absolute inset-0 z-0 h-full w-full bg-white bg-[linear-gradient(to_right,#10b98133_1px,transparent_1px),linear-gradient(to_bottom,#10b98133_1px,transparent_1px)] bg-[size:40px_40px]"></div>
+        
+        <div className="relative z-10 w-full max-w-md px-8 py-8 space-y-8">
           <div className="space-y-2">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900">Welcome back</h1>
             <p className="text-gray-500 text-base">

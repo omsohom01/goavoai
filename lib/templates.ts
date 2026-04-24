@@ -13,6 +13,18 @@ export type EventTemplate = {
 
 export const EVENT_TEMPLATES: EventTemplate[] = [
   {
+    id: "blank",
+    name: "Blank Template",
+    icon: "⬜",
+    description: "Start with a blank template",
+    titlePattern: "",
+    descriptionTemplate: "",
+    locationType: "online",
+    capacityDefault: 50,
+    rsvpModeDefault: "open",
+    registrationMode: "free",
+  },
+  {
     id: "workshop",
     name: "Workshop",
     icon: "🎓",
@@ -63,19 +75,6 @@ export const EVENT_TEMPLATES: EventTemplate[] = [
     capacityDefault: 80,
     rsvpModeDefault: "open",
     registrationMode: "free",
-  },
-  {
-    id: "training",
-    name: "Training Session",
-    icon: "🏋️",
-    description: "Structured training course with certification",
-    titlePattern: "{Level} Training: {Topic}",
-    descriptionTemplate:
-      "Comprehensive training program designed for beginners and professionals:\n\n• 8-week structured curriculum\n• Hands-on projects\n• Mentorship included\n• Industry-recognized certification\n\nEnroll now to secure your spot!",
-    locationType: "offline",
-    capacityDefault: 30,
-    rsvpModeDefault: "shortlisted",
-    registrationMode: "paid",
   },
   {
     id: "networking",

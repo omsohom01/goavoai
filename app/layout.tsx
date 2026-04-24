@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
+import AutoLogout from "@/components/AutoLogout";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -27,7 +28,7 @@ const rusticRoadway = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "EventForge SaaS",
+  title: "Evexa",
   description: "Production-style event management platform built with Next.js",
 };
 
@@ -42,6 +43,7 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} ${montserrat.variable} ${rusticRoadway.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
+        <AutoLogout />
         <Navbar />
         {children}
         <Toaster position="top-right" richColors />

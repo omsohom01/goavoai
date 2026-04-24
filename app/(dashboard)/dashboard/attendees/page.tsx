@@ -4,10 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import LoadingState from "@/components/LoadingState";
 import type { EventItem, RegistrationItem } from "@/lib/types";
 
+interface RegistrationWithEvent extends RegistrationItem {
+  eventTitle?: string;
+}
+
 export default function AttendeesPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
-  const [eventId, setEventId] = useState("");
-  const [registrations, setRegistrations] = useState<RegistrationItem[]>([]);
+  const [eventId, setEventId] = useState("all");
+  const [registrations, setRegistrations] = useState<RegistrationWithEvent[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
@@ -18,9 +22,7 @@ export default function AttendeesPage() {
       .then((data) => {
         const list = data.events ?? [];
         setEvents(list);
-        if (list[0]) {
-          setEventId(list[0]._id);
-        }
+        setEventId("all");
       })
       .finally(() => setLoading(false));
   }, []);
@@ -32,12 +34,34 @@ export default function AttendeesPage() {
     if (query) params.set("q", query);
     if (status !== "all") params.set("status", status);
 
-    fetch(`/api/registrations/${eventId}?${params.toString()}`)
-      .then((response) => response.json())
-      .then((data) => setRegistrations(data.registrations ?? []));
-  }, [eventId, query, status]);
+    if (eventId === "all") {
+      // Fetch registrations from all events
+      Promise.all(
+        events.map((event) =>
+          fetch(`/api/registrations/${event._id}?${params.toString()}`)
+            .then((response) => response.json())
+            .then((data) => {
+              return (data.registrations ?? []).map((reg: RegistrationItem) => ({
+                ...reg,
+                eventTitle: event.title,
+              }));
+            })
+            .catch(() => [])
+        )
+      )
+        .then((allRegistrations) => {
+          const flattened = allRegistrations.flat();
+          setRegistrations(flattened);
+        });
+    } else {
+      fetch(`/api/registrations/${eventId}?${params.toString()}`)
+        .then((response) => response.json())
+        .then((data) => setRegistrations(data.registrations ?? []));
+    }
+  }, [eventId, query, status, events]);
 
   const selectedEvent = useMemo(() => events.find((event) => event._id === eventId), [events, eventId]);
+  const isAllEvents = eventId === "all";
 
   if (loading) {
     return <LoadingState label="Loading attendee explorer..." />;
@@ -48,6 +72,7 @@ export default function AttendeesPage() {
       <h2 className="kpi text-xl font-semibold">Attendee Dashboard</h2>
       <div className="panel grid gap-3 p-4 md:grid-cols-4">
         <select value={eventId} onChange={(event) => setEventId(event.target.value)} className="rounded-lg border border-slate-200 px-3 py-2 text-sm">
+          <option value="all">All Events</option>
           {events.map((event) => (
             <option key={event._id} value={event._id}>
               {event.title}
@@ -67,7 +92,7 @@ export default function AttendeesPage() {
           <option value="rejected">Rejected</option>
         </select>
         <div className="rounded-lg bg-slate-100 px-3 py-2 text-sm text-slate-600">
-          Capacity: {selectedEvent?.capacity ?? 0}
+          {isAllEvents ? `Total Attendees: ${registrations.length}` : `Capacity: ${selectedEvent?.capacity ?? 0}`}
         </div>
       </div>
 
@@ -78,6 +103,7 @@ export default function AttendeesPage() {
               <th className="pb-2">Name</th>
               <th className="pb-2">Email</th>
               <th className="pb-2">Phone</th>
+              {isAllEvents && <th className="pb-2">Event</th>}
               <th className="pb-2">Status</th>
             </tr>
           </thead>
@@ -87,6 +113,7 @@ export default function AttendeesPage() {
                 <td className="py-2">{registration.name}</td>
                 <td className="py-2">{registration.email}</td>
                 <td className="py-2">{registration.phone || "-"}</td>
+                {isAllEvents && <td className="py-2">{registration.eventTitle}</td>}
                 <td className="py-2 uppercase">{registration.status}</td>
               </tr>
             ))}
