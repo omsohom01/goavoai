@@ -31,8 +31,15 @@ export default function EditEventPage() {
   }
 
   return (
-    <div className="space-y-4">
-      <h2 className="kpi text-xl font-semibold">Edit Event</h2>
+    <div className="mx-auto w-full max-w-4xl space-y-6">
+      <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
+        <p className="font-clash text-xs uppercase tracking-[0.2em] text-slate-500">Dashboard</p>
+        <h2 className="mt-2 text-3xl text-slate-900 sm:text-4xl">
+          <span className="font-clash font-semibold">Edit </span>
+          <span className="font-rustic align-middle text-emerald-600">Event</span>
+        </h2>
+        <p className="mt-2 text-sm text-slate-600">Update details, schedule, and registration settings.</p>
+      </div>
       <EventForm initial={event} />
     </div>
   );

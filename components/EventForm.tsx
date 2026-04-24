@@ -79,6 +79,20 @@ export default function EventForm({ initial, template }: EventFormProps) {
     event.preventDefault();
     setLoading(true);
 
+    const now = new Date();
+    
+    if (selectedDate.toDateString() === now.toDateString()) {
+      if (selectedDate.getTime() < now.getTime()) {
+        toast.error("Event time cannot be in the past for today's date");
+        setLoading(false);
+        return;
+      }
+    } else if (selectedDate.getTime() < now.getTime()) {
+      toast.error("Event date cannot be in the past");
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData(event.currentTarget);
     
     const payload = {

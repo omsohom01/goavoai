@@ -32,6 +32,7 @@ type EventUpdateWhatsappInput = {
   venue: string;
   updateType: "updated" | "cancelled";
   updateSummary?: string;
+  isRepublish?: boolean;
 };
 
 function formatDate(value: Date) {
@@ -133,19 +134,34 @@ export async function sendEventUpdateWhatsapp(input: EventUpdateWhatsappInput): 
   }
 
   const cancelled = input.updateType === "cancelled";
-  const body = cancelled
-    ? "This event has been cancelled by the organizer."
-    : "The organizer has updated event details. Please review the latest information.";
+  const republished = input.isRepublish === true;
+
+  let body: string;
+  if (cancelled) {
+    body = `${input.eventTitle} has been cancelled by the organizer. We apologize for any inconvenience caused.`;
+  } else if (republished) {
+    body = `Great news! ${input.eventTitle} is happening again! The event details have been updated below.`;
+  } else {
+    body = "The organizer has updated event details. Please review the latest information below.";
+  }
 
   const text = [
     `Hi ${input.attendeeName},`,
-    body,
     "",
-    "Event details:",
-    `Title: ${input.eventTitle}`,
-    `Date: ${formatDate(input.eventDate)}`,
-    `Venue: ${input.venue}`,
-    ...(input.updateSummary ? [`What changed: ${input.updateSummary}`] : []),
+    body,
+    ...(!cancelled
+      ? [
+          "",
+          "Event details:",
+          `- Title: ${input.eventTitle}`,
+          `- Date: ${formatDate(input.eventDate)}`,
+          `- Venue: ${input.venue}`,
+          ...(!republished && input.updateSummary ? ["", "What changed:", `- ${input.updateSummary}`] : []),
+        ]
+      : []),
+    "",
+    "Regards,",
+    "EventForge Team",
   ].join("\n");
 
   return notifyWhatsapp({ to: input.phone, text });

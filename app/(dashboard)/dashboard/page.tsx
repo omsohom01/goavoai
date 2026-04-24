@@ -62,7 +62,6 @@ export default function DashboardPage() {
               <h2 className="font-rustic text-5xl md:text-[5rem] leading-[1.3] py-2 px-12 -mt-2 font-normal animate-spacing-in hover:tracking-widest transition-all duration-500 ease-out bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 drop-shadow-sm">
                 Events
               </h2>
-              <p className="mt-1 text-sm text-slate-500 font-medium">Manage and monitor all your events in one place.</p>
             </div>
             
             {events.length > 0 && (
@@ -134,11 +133,11 @@ export default function DashboardPage() {
                   
                   <div className="mt-8 flex flex-wrap items-center gap-2">
                     <Link href={`/dashboard/events/${event._id}`} className="group/btn relative overflow-hidden flex-1 rounded-full border border-slate-200 bg-white py-2 text-center text-[13px] font-semibold text-slate-700 shadow-sm transition-all">
-                      <span className="absolute inset-0 h-full w-full bg-emerald-500 translate-y-[101%] transition-transform duration-300 ease-out group-hover/btn:translate-y-0" />
+                      <span className="absolute inset-0 h-full w-full bg-black translate-y-[101%] transition-transform duration-300 ease-out group-hover/btn:translate-y-0" />
                       <span className="relative z-10 transition-colors duration-300 group-hover/btn:text-white">Manage</span>
                     </Link>
                     <Link href={`/dashboard/events/${event._id}/edit`} className="group/btn relative overflow-hidden flex-1 rounded-full border border-slate-200 bg-white py-2 text-center text-[13px] font-semibold text-slate-700 shadow-sm transition-all">
-                      <span className="absolute inset-0 h-full w-full bg-emerald-500 translate-y-[101%] transition-transform duration-300 ease-out group-hover/btn:translate-y-0" />
+                      <span className="absolute inset-0 h-full w-full bg-black translate-y-[101%] transition-transform duration-300 ease-out group-hover/btn:translate-y-0" />
                       <span className="relative z-10 transition-colors duration-300 group-hover/btn:text-white">Edit</span>
                     </Link>
                     <Link href={`/event/${event._id}`} className="group/btn relative overflow-hidden flex-[1.2] rounded-full border border-emerald-500 bg-emerald-500 py-2 text-center text-[13px] font-semibold text-white shadow-sm transition-all">

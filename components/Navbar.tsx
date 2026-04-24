@@ -19,7 +19,7 @@ export default function Navbar() {
   const router = useRouter();
 
   // Pages where navbar should NOT be visible
-  const isExcluded = pathname === "/" || pathname.startsWith("/login") || pathname.startsWith("/register");
+  const isExcluded = pathname === "/" || pathname.startsWith("/login") || pathname.startsWith("/register") || pathname.startsWith("/event/");
   
   if (isExcluded) return null;
 

@@ -1,4 +1,7 @@
 import { Resend } from "resend";
+import { render } from "@react-email/render";
+import { EvexaEmailTemplate } from "@/components/emails/EvexaEmailTemplate";
+import * as React from "react";
 
 type RegistrationConfirmationInput = {
   attendeeName: string;
@@ -37,7 +40,7 @@ function getEmailClient() {
 }
 
 function getFromAddress() {
-  return process.env.RESEND_FROM_EMAIL || "EventForge <onboarding@resend.dev>";
+  return process.env.RESEND_FROM_EMAIL || "Evexa <onboarding@resend.dev>";
 }
 
 function formatDate(value: Date) {
@@ -74,23 +77,29 @@ export async function sendRegistrationConfirmationEmail(input: RegistrationConfi
     ? "Your RSVP is approved instantly. Your spot is confirmed."
     : "Your RSVP is now pending review. The organizer will notify you after reviewing your application.";
 
+  const html = await render(
+    <EvexaEmailTemplate
+      attendeeName={input.attendeeName}
+      heading={subject}
+      eventHeading={input.eventTitle}
+      bodyParagraphs={[
+        `Thanks for registering for ${input.eventTitle}.`,
+        statusLine
+      ]}
+      eventDetails={[
+        { label: "Title", value: input.eventTitle },
+        { label: "Date", value: formatDate(input.eventDate) },
+        { label: "Venue", value: input.venue },
+        { label: "RSVP Mode", value: isOpen ? "Open RSVP" : "Shortlisted RSVP" }
+      ]}
+      type="happy"
+    />
+  );
+
   await sendEmail({
     to: input.attendeeEmail,
     subject,
-    html: `
-      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;">
-        <h2 style="margin:0 0 12px;">Hi ${input.attendeeName},</h2>
-        <p>Thanks for registering for <strong>${input.eventTitle}</strong>.</p>
-        <p>${statusLine}</p>
-        <p style="margin:16px 0 0;"><strong>Event details</strong></p>
-        <ul style="padding-left:18px;">
-          <li>Date: ${formatDate(input.eventDate)}</li>
-          <li>Venue: ${input.venue}</li>
-          <li>RSVP mode: ${isOpen ? "Open RSVP" : "Shortlisted RSVP"}</li>
-        </ul>
-        <p style="margin-top:18px;">See you there,<br/>EventForge Team</p>
-      </div>
-    `,
+    html,
     text: `Hi ${input.attendeeName},\n\nThanks for registering for ${input.eventTitle}.\n${statusLine}\n\nEvent details:\n- Date: ${formatDate(input.eventDate)}\n- Venue: ${input.venue}\n- RSVP mode: ${isOpen ? "Open RSVP" : "Shortlisted RSVP"}\n\nSee you there,\nEventForge Team`,
   });
 }
@@ -105,17 +114,21 @@ export async function sendRegistrationDecisionEmail(input: RegistrationDecisionI
     ? "Great news. You have been approved and your spot is now confirmed."
     : "Thank you for applying. After reviewing all applications, we are unable to offer a spot this time.";
 
+  const html = await render(
+    <EvexaEmailTemplate
+      attendeeName={input.attendeeName}
+      heading={approved ? "You're Approved!" : "Application Update"}
+      eventHeading={input.eventTitle}
+      bodyParagraphs={[body]}
+      eventDetails={[{ label: "Title", value: input.eventTitle }]}
+      type={approved ? "happy" : "sad"}
+    />
+  );
+
   await sendEmail({
     to: input.attendeeEmail,
     subject,
-    html: `
-      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;">
-        <h2 style="margin:0 0 12px;">Hi ${input.attendeeName},</h2>
-        <p>${body}</p>
-        <p>Event: <strong>${input.eventTitle}</strong></p>
-        <p style="margin-top:18px;">Regards,<br/>EventForge Team</p>
-      </div>
-    `,
+    html,
     text: `Hi ${input.attendeeName},\n\n${body}\n\nEvent: ${input.eventTitle}\n\nRegards,\nEventForge Team`,
   });
 }
@@ -129,31 +142,41 @@ export async function sendEventUpdateEmail(input: EventUpdateInput) {
 
   if (cancelled) {
     subject = `Event cancelled: ${input.eventTitle}`;
-    body = `<strong>${input.eventTitle}</strong> has been cancelled by the organizer. We apologize for any inconvenience caused.`;
+    body = `${input.eventTitle} has been cancelled by the organizer. We apologize for any inconvenience caused.`;
   } else if (republished) {
     subject = `Great news! ${input.eventTitle} is happening again`;
-    body = `Great news! <strong>${input.eventTitle}</strong> is happening again! The event details have been updated below.`;
+    body = `Great news! ${input.eventTitle} is happening again! The event details have been updated below.`;
   } else {
     subject = `Event update: ${input.eventTitle}`;
     body = "The organizer has updated event details. Please review the latest information below.";
   }
 
+  const html = await render(
+    <EvexaEmailTemplate
+      attendeeName={input.attendeeName}
+      heading={cancelled ? "Event Cancelled Update" : "Event Update"}
+      eventHeading={input.eventTitle}
+      bodyParagraphs={[
+        body,
+        ...(!republished && input.updateSummary ? [`What changed: ${input.updateSummary}`] : [])
+      ]}
+      eventDetails={
+        !cancelled
+          ? [
+              { label: "Title", value: input.eventTitle },
+              { label: "Date", value: formatDate(input.eventDate) },
+              { label: "Venue", value: input.venue },
+            ]
+          : undefined
+      }
+      type={cancelled ? "sad" : "happy"}
+    />
+  );
+
   await sendEmail({
     to: input.attendeeEmail,
     subject,
-    html: `
-      <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a;">
-        <h2 style="margin:0 0 12px;">Hi ${input.attendeeName},</h2>
-        <p>${body}</p>
-        ${!cancelled ? `<p style="margin:16px 0 0;"><strong>Event details</strong></p>
-        <ul style="padding-left:18px;">
-          <li>Date: ${formatDate(input.eventDate)}</li>
-          <li>Venue: ${input.venue}</li>
-        </ul>
-        ${!republished && input.updateSummary ? `<p><strong>What changed:</strong> ${input.updateSummary}</p>` : ""}` : ""}
-        <p style="margin-top:18px;">Regards,<br/>EventForge Team</p>
-      </div>
-    `,
-    text: `Hi ${input.attendeeName},\n\n${body.replace(/<[^>]*>/g, '')}${!cancelled ? `\n\nEvent details:\n- Date: ${formatDate(input.eventDate)}\n- Venue: ${input.venue}${!republished && input.updateSummary ? `\n- What changed: ${input.updateSummary}` : ""}` : ""}\n\nRegards,\nEventForge Team`,
+    html,
+    text: `Hi ${input.attendeeName},\n\n${body.replace(/<[^>]*>/g, '')}${!cancelled ? `\n\nEvent details:\n- Title: ${input.eventTitle}\n- Date: ${formatDate(input.eventDate)}\n- Venue: ${input.venue}${!republished && input.updateSummary ? `\n\nWhat changed:\n- ${input.updateSummary}` : ""}` : ""}\n\nRegards,\nEventForge Team`,
   });
 }

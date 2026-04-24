@@ -108,19 +108,24 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   };
 
   const changedFields: string[] = [];
-  if (previous.title !== updated.title) changedFields.push("title");
-  if (previous.description !== updated.description) changedFields.push("description");
+  if (previous.title !== updated.title) {
+    changedFields.push(`title from "${previous.title}" to "${updated.title}"`);
+  }
+  if (previous.description !== updated.description) {
+    const oldDesc = previous.description.length > 50 ? previous.description.substring(0, 47) + "..." : previous.description;
+    const newDesc = updated.description.length > 50 ? updated.description.substring(0, 47) + "..." : updated.description;
+    changedFields.push(`description from "${oldDesc}" to "${newDesc}"`);
+  }
   if (previous.dateTime.getTime() !== updated.dateTime.getTime()) changedFields.push("date and time");
   if (previous.locationType !== updated.locationType) changedFields.push("location mode");
   if (previous.rsvpMode !== updated.rsvpMode) changedFields.push("RSVP mode");
   if (previous.venue !== updated.venue) changedFields.push("venue");
-  if (previous.capacity !== updated.capacity) changedFields.push("capacity");
   if (previous.status !== updated.status) changedFields.push("status");
 
   if (changedFields.length > 0) {
     const attendees = await Registration.find({ eventId: event._id }).select("name email phone");
     const updateType = event.status === "cancelled" ? "cancelled" : "updated";
-    const updateSummary = changedFields.join(", ");
+    const updateSummary = changedFields.join("\n- ");
     const isRepublish = previous.status === "cancelled" && event.status !== "cancelled";
 
     await Promise.all(
@@ -157,6 +162,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
               venue: event.venue,
               updateType,
               updateSummary,
+              isRepublish,
             });
 
             await MessageLog.findByIdAndUpdate(log._id, {
