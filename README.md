@@ -1,95 +1,93 @@
-# EventForge SaaS (Next.js Full Stack)
+<div align="center">
+  
+  # ✨ EventForge SaaS ✨
+  
+  *The ultimate production-ready Event Management SaaS platform built with Next.js.*
 
-Production-ready Event Management SaaS platform built entirely in Next.js App Router with no separate backend server.
+  [![Next.js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/)
 
-## Tech Stack
+</div>
 
-- Next.js (App Router)
-- React
-- Tailwind CSS
-- TypeScript
-- MongoDB + Mongoose
-- JWT authentication with HTTP-only cookies
+<br />
 
-## Core Features
+## 🌟 Overview
 
-- Organizer authentication
-	- POST `/api/auth/register`
-	- POST `/api/auth/login`
-	- GET `/api/auth/me`
-- Event management CRUD
-	- POST `/api/events`
-	- GET `/api/events`
-	- GET `/api/events/:id`
-	- PUT `/api/events/:id`
-	- DELETE `/api/events/:id`
-- Public event page + registration
-	- Route `/event/[id]`
-	- POST `/api/registrations`
-- Attendee dashboard flows
-	- GET `/api/registrations/:eventId`
-	- PUT `/api/registrations/:id`
-	- Approve / reject / revoke
-	- Search + filter
-- Capacity automation
-	- Blocks registration when event is cancelled/full
-	- Dynamically recomputes `isFull` based on approved attendee count
-- WhatsApp integration (via Go backend service)
-	- `whatsappEnabled` toggle on event
-	- Phone field required when WhatsApp is enabled
-	- Real WhatsApp send attempts with Sent/Failed logs
-	- Meta webhook verify/callback support from `gbackend`
+EventForge is a high-performance Event Management platform designed for seamless event creation, capacity automation, and intelligent attendee management. It delivers a premium experience for both organizers and attendees through a clean, modern interface and robust automated workflows.
 
-## Project Structure
+---
 
-- Frontend + backend in one repository
-- API routes: `app/api/*`
-- Models: `models/*`
-- Utilities: `lib/*`
+## 👥 User Workflow
 
-## Setup
+The EventForge experience is optimized for two distinct roles.
 
-1. Install dependencies:
+### 💼 1. Organizer Experience
+> Manage events with precision and ease.
 
-```bash
-npm install
-```
+- **Secure Access**: Register and log in to a private, premium dashboard.
+- **Dynamic Creation**: Build events with rich metadata, custom capacities, and optional **WhatsApp integrations**.
+- **Live Monitoring**: Track registration trends and attendee metrics in real-time.
+- **Intelligent Moderation**:
+  - **Open RSVP**: Instant approval for high-velocity events.
+  - **Shortlisted RSVP**: Manual vetting of attendee profiles for exclusive gatherings.
+- **Mass Communication**: Automatically notify all attendees via email when event details change or cancellations occur.
 
-2. Copy and configure environment variables:
+### 🎟️ 2. Attendee Experience
+> A frictionless journey from discovery to confirmation.
 
-```bash
-cp .env.example .env.local
-```
+- **SEO Landing Pages**: Access beautifully rendered event pages via unique shareable links.
+- **Smart Forms**: Fill out adaptive registration forms that validate inputs (like WhatsApp numbers) in real-time.
+- **Automated Alerts**:
+  - Receive "Application Received" or "Registration Confirmed" emails instantly.
+  - Get notified of approval/rejection decisions via professionally designed templates.
+- **Capacity Safeguards**: The system automatically closes registrations once limits are reached or if the event is cancelled.
 
-3. Update `.env.local` values:
+---
 
-- `MONGODB_URI`
-- `JWT_SECRET`
-- `NEXT_PUBLIC_BASE_URL`
-- `RESEND_API_KEY`
-- `RESEND_FROM_EMAIL`
-- `WHATSAPP_BACKEND_URL` (for example `https://your-gbackend.onrender.com`)
-- `WHATSAPP_BACKEND_API_KEY` (must match `WHATSAPP_SERVICE_API_KEY` in gbackend if configured)
+## ⚙️ Technical Workflow & Architecture
 
-Email behavior:
+EventForge follows a modern **Full-Stack Monolith** architecture powered by the Next.js App Router.
 
-- Registration confirmation email is sent after attendee registers.
-- Open RSVP events send instant confirmation messaging.
-- Shortlisted RSVP events send application received messaging.
-- Approval or rejection by organizer sends attendee decision email.
-- Any event edit (including cancellation) sends event update email to registered attendees.
+### 🏗️ Core Architecture
+- **Unified Repository**: Frontend and Backend (Node.js/Next.js API Routes) live together for seamless development.
+- **Data Layer**: MongoDB & Mongoose handle complex relationships between Users, Events, and Registrations.
+- **Security**: 
+  - **Bcrypt.js** for password hashing.
+  - **JWT** for stateless sessions, delivered via secure **HTTP-only cookies**.
+  - **Middleware**-level route protection for all sensitive dashboard and API paths.
 
-4. Run development server:
+### 🔄 Automated Logic Flow
+1. **Capacity Engine**: A server-side utility that re-calculates `isFull` status by comparing approved registrations against the event's defined limit.
+2. **Notification Pipeline**: 
+   - Uses **Resend** and **React Email** for transactional emails.
+   - Triggers are hooked into DB operations (e.g., `onUpdate` or `onStatusChange`).
+3. **External Sync**: Communicates with a dedicated **Go backend** for reliable WhatsApp delivery and Meta webhook processing.
 
-```bash
-npm run dev
-```
+---
 
-5. Open `http://localhost:3000`
+## 🛠️ Tech Stack
 
-## Security
+| Category | Technology |
+| :--- | :--- |
+| **Framework** | Next.js 14+ (App Router) |
+| **Styling** | Tailwind CSS (Glassmorphism & Dark Mode) |
+| **Database** | MongoDB & Mongoose |
+| **Auth** | JWT & HTTP-only Cookies |
+| **Validation** | Zod (End-to-end Type Safety) |
+| **Mailing** | Resend & React Email |
 
-- Passwords hashed with `bcryptjs`
-- JWT stored in HTTP-only cookie
-- Middleware route protection for dashboard + protected APIs
-- Zod validation for auth/event/registration payloads
+---
+
+## 🚀 Getting Started
+
+1. **Install Deps**: `npm install`
+2. **Config Environment**: Copy `.env.example` to `.env.local` and fill in your keys.
+3. **Launch**: `npm run dev`
+
+---
+
+<div align="center">
+  <p>Crafted with precision for the modern event organizer.</p>
+</div>
