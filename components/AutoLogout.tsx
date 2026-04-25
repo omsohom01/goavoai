@@ -24,7 +24,7 @@ export default function AutoLogout() {
   // The value is in milliseconds.
   // 1 minute = 60 * 1000 = 60000 ms
   // ============================================================
-  const INACTIVITY_LIMIT = 120 * 1000;
+  const INACTIVITY_LIMIT = 60 * 1000;
   // ============================================================
 
   const STORAGE_KEY = "goavoai_last_activity";
