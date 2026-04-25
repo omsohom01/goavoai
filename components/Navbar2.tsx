@@ -13,7 +13,7 @@ export default function Navbar2() {
   if (!isLanding && !isEventPage) return null;
 
   return (
-    <nav className="fixed top-2 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 px-4 border ">
+    <nav className="fixed top-2 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 px-4">
       <div className="flex h-14 items-center justify-between rounded-full border border-slate-600/60 bg-white/80 px-4 backdrop-blur-xl md:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">

@@ -178,7 +178,7 @@ export default function EventForm({ initial, template }: EventFormProps) {
         }
       `}</style>
       {/* Essential Info */}
-      <div className="space-y-4">
+      <div className="space-y-4" data-tour="event-details">
         <div className="group relative">
           <input
             name="title"
@@ -240,6 +240,7 @@ export default function EventForm({ initial, template }: EventFormProps) {
             type="button"
             onClick={handleEnhance}
             disabled={isEnhancing}
+            data-tour="enhance-ai"
             className="absolute bottom-4 right-4 group flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-50"
           >
             <Sparkles className={`h-3.5 w-3.5 ${isEnhancing ? "animate-pulse" : "group-hover:scale-110"}`} />

@@ -76,6 +76,7 @@ export default function TemplateSelector({ onSelect }: TemplateSelectorProps) {
             <button
               key={template.id}
               onClick={() => onSelect(template)}
+              data-tour={template.id === "blank" ? "template-scratch" : undefined}
               className="group relative flex flex-col justify-between overflow-hidden rounded-[2.5rem] border border-slate-200/60 bg-white/70 p-7 text-left shadow-sm transition-all duration-300 hover:border-emerald-500/30 hover:bg-white hover:shadow-xl hover:shadow-emerald-900/5 hover:-translate-y-1"
             >
               <div className="relative z-10">

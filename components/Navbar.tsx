@@ -37,10 +37,10 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed top-2 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 px-4 border ">
+    <nav className="fixed top-2 left-1/2 z-50 w-full max-w-5xl -translate-x-1/2 px-4">
       <div className="flex h-14 items-center justify-between rounded-full border border-slate-600/60 bg-white/80 px-4 backdrop-blur-xl md:px-6 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
+        <Link href="/" data-tour="navbar-logo" className="flex items-center gap-2.5 transition-opacity hover:opacity-80">
           <div className="relative h-7 w-7 overflow-hidden rounded-lg invert">
             <Image
               src="/logo.png"
@@ -63,6 +63,7 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
+                data-tour={`navbar-${item.label.toLowerCase()}`}
                 className={cn(
                   "font-clash relative rounded-full px-5 py-1.5 text-[13px] font-medium transition-all duration-300",
                   active
@@ -79,6 +80,7 @@ export default function Navbar() {
         {/* Right Action Button */}
         <div className="flex items-center gap-2">
           <button
+            data-tour="navbar-logout"
             onClick={handleLogout}
             className="flex items-center gap-2 rounded-full bg-slate-900 px-4 py-1.5 text-[13px] font-semibold text-white transition-all duration-300 hover:bg-slate-300/40 hover:text-black"
           >

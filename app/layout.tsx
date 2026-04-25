@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
 import Navbar2 from "@/components/Navbar2";
 import AutoLogout from "@/components/AutoLogout";
+import { TourProvider } from "@/components/TourProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -33,6 +34,8 @@ export const metadata: Metadata = {
   description: "Production-style event management platform built with Next.js",
 };
 
+import EvexaTour from "@/components/EvexaTour";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,11 +47,14 @@ export default function RootLayout({
       className={`${inter.variable} ${spaceGrotesk.variable} ${montserrat.variable} ${rusticRoadway.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
-        <AutoLogout />
-        <Navbar />
-        <Navbar2 />
-        {children}
-        <Toaster position="top-right" richColors />
+        <TourProvider>
+          <EvexaTour />
+          <AutoLogout />
+          <Navbar />
+          <Navbar2 />
+          {children}
+          <Toaster position="top-right" richColors />
+        </TourProvider>
       </body>
     </html>
   );

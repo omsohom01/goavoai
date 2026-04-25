@@ -7,10 +7,12 @@ import LoadingState from "@/components/LoadingState";
 import Magnet from "@/components/Magnet";
 import { Plus } from "lucide-react";
 import type { EventItem } from "@/lib/types";
+import { useTour } from "@/components/TourProvider";
 
 export default function DashboardPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const { startTour } = useTour();
 
   useEffect(() => {
     let mounted = true;
@@ -21,6 +23,12 @@ export default function DashboardPage() {
         if (mounted) {
           setEvents(data.events ?? []);
           setLoading(false);
+
+          // Auto-start tour for first-time users
+          const tourDone = localStorage.getItem("evexa_tour_done");
+          if (!tourDone) {
+            setTimeout(() => startTour(), 600);
+          }
         }
       })
       .catch(() => setLoading(false));
@@ -28,7 +36,7 @@ export default function DashboardPage() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [startTour]);
 
   if (loading) {
     return <LoadingState label="Fetching your events..." />;
@@ -59,7 +67,7 @@ export default function DashboardPage() {
           {/* Header Section */}
           <div className="mb-10 flex flex-col items-center text-center gap-4">
             <div className="flex flex-col items-center">
-              <h2 className="font-rustic text-5xl md:text-[5rem] leading-[1.3] py-2 px-12 -mt-2 font-normal animate-spacing-in hover:tracking-widest transition-all duration-500 ease-out bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 drop-shadow-sm">
+              <h2 data-tour="dashboard-heading" className="font-rustic text-5xl md:text-[5rem] leading-[1.3] py-2 px-12 -mt-2 font-normal animate-spacing-in hover:tracking-widest transition-all duration-500 ease-out bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-teal-500 to-emerald-600 drop-shadow-sm">
                 Events
               </h2>
             </div>
@@ -67,6 +75,7 @@ export default function DashboardPage() {
             {events.length > 0 && (
               <Magnet padding={20} magnetStrength={2}>
                 <Link
+                  data-tour="new-event-btn"
                   href="/dashboard/events/new"
                   className="font-clash group relative flex h-12 w-40 items-center justify-center overflow-hidden rounded-full border border-emerald-500 bg-emerald-500 text-sm font-bold text-white shadow-sm transition-all hover:border-slate-900 hover:bg-slate-900 hover:shadow-md hover:-translate-y-0.5"
                 >
@@ -86,6 +95,7 @@ export default function DashboardPage() {
               />
               <Magnet padding={20} magnetStrength={2}>
                 <Link
+                  data-tour="new-event-btn"
                   href="/dashboard/events/new"
                   className="font-clash group relative flex h-12 w-40 items-center justify-center overflow-hidden rounded-full border border-emerald-500 bg-emerald-500 text-sm font-bold text-white shadow-sm transition-all hover:border-slate-900 hover:bg-slate-900 hover:shadow-md hover:-translate-y-0.5"
                 >
