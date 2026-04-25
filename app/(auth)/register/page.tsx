@@ -64,7 +64,8 @@ export default function RegisterPage() {
 
     toast.success("Account created successfully");
     localStorage.removeItem("evexa_tour_done"); // clear so tour shows on dashboard
-    router.replace("/login");
+    router.replace("/dashboard");
+    router.refresh();
   }
 
   return (

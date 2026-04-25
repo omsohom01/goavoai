@@ -298,6 +298,7 @@ export default function EvexaTour() {
 
     const finishedStatuses: string[] = [STATUS.FINISHED, STATUS.SKIPPED];
     if (finishedStatuses.includes(status)) {
+      localStorage.setItem("evexa_tour_done", "true");
       endTour();
     }
   }
