@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { FormEvent, useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
-import { Calendar as CalendarIcon, Clock, MapPin, Users as UsersIcon, Layout, Info, CheckCircle2 } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, MapPin, Users as UsersIcon, Layout, Info, CheckCircle2, Sparkles } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import type { EventItem } from "@/lib/types";
 import type { EventTemplate } from "@/lib/templates";
@@ -27,6 +27,7 @@ export default function EventForm({ initial, template }: EventFormProps) {
   const [descValue, setDescValue] = useState(initial?.description ?? template?.descriptionTemplate ?? "");
   const [isTitleFocused, setIsTitleFocused] = useState(false);
   const [isDescFocused, setIsDescFocused] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
   
   // Dynamic Placeholders
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -129,8 +130,53 @@ export default function EventForm({ initial, template }: EventFormProps) {
     router.refresh();
   }
 
+  async function handleEnhance() {
+    if (!descValue.trim()) {
+      toast.error("Please write a line to enhance first");
+      return;
+    }
+
+    setIsEnhancing(true);
+    try {
+      const response = await fetch("/api/ai/enhance", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: descValue }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to enhance");
+      }
+
+      const data = await response.json();
+      setDescValue(data.enhancedText);
+      toast.success("Description enhanced!");
+    } catch (error) {
+      console.error(error);
+      toast.error("AI enhancement failed. Please check your API key.");
+    } finally {
+      setIsEnhancing(false);
+    }
+  }
+
   return (
     <form onSubmit={handleSubmit} className="mx-auto w-full max-w-3xl space-y-8 pb-12">
+      <style>{`
+        .description-textarea::-webkit-scrollbar {
+          width: 4px;
+        }
+        .description-textarea::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .description-textarea::-webkit-scrollbar-thumb {
+          background: #10b981;
+          border-radius: 10px;
+        }
+        .description-textarea {
+          scrollbar-width: thin;
+          scrollbar-color: #10b981 transparent;
+        }
+      `}</style>
       {/* Essential Info */}
       <div className="space-y-4">
         <div className="group relative">
@@ -169,7 +215,7 @@ export default function EventForm({ initial, template }: EventFormProps) {
             onChange={(e) => setDescValue(e.target.value)}
             onFocus={() => setIsDescFocused(true)}
             onBlur={() => setIsDescFocused(false)}
-            className="min-h-40 w-full rounded-[2rem] border border-slate-200 bg-white/50 px-8 py-6 text-base text-slate-700 outline-none transition-[border-color,background-color] duration-200 hover:border-slate-400 focus:border-emerald-500/50 focus:bg-white"
+            className="min-h-40 w-full rounded-[2rem] border border-slate-200 bg-white/50 px-8 pb-16 pt-6 text-base text-slate-700 outline-none transition-[border-color,background-color] duration-200 hover:border-slate-400 focus:border-emerald-500/50 focus:bg-white description-textarea"
             required
           />
           {!descValue && !isDescFocused && (
@@ -189,6 +235,16 @@ export default function EventForm({ initial, template }: EventFormProps) {
               </AnimatePresence>
             </div>
           )}
+          
+          <button
+            type="button"
+            onClick={handleEnhance}
+            disabled={isEnhancing}
+            className="absolute bottom-4 right-4 group flex items-center gap-2 rounded-full bg-slate-900 px-4 py-2.5 text-xs font-bold text-white shadow-lg transition-all hover:bg-emerald-600 active:scale-95 disabled:opacity-50"
+          >
+            <Sparkles className={`h-3.5 w-3.5 ${isEnhancing ? "animate-pulse" : "group-hover:scale-110"}`} />
+            {isEnhancing ? "Enhancing..." : "Enhance with AI"}
+          </button>
         </div>
       </div>
 
