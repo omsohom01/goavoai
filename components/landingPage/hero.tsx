@@ -52,7 +52,7 @@ const Hero = () => {
 
   return (
     <section
-      className="relative isolate overflow-hidden "
+      className="relative isolate overflow-hidden min-h-screen"
       style={{ background: "linear-gradient(160deg, #ffffff 70%, #f0fdf4 100%)" }}
     >
       <GridBackground className="absolute inset-0 z-0" />
@@ -104,7 +104,7 @@ const Hero = () => {
         aria-hidden="true"
         className="pointer-events-none absolute -bottom-[22rem] left-1/2 z-0 h-[45rem] w-[100vw] -translate-x-1/2 rounded-[100%]"
         style={{
-          background: "radial-gradient(50% 50% at 50% 50%, rgba(16, 185, 129, 0.4) 0%, rgba(5, 150, 105, 0.15) 50%, transparent 85%)",
+          background: "radial-gradient(50% 50% at 50% 50%, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.06) 50%, transparent 85%)",
           filter: "blur(60px)",
         }}
       />
@@ -144,8 +144,8 @@ const Hero = () => {
                 WebkitTextFillColor: "transparent",
                 backgroundClip: "text",
                 filter: "drop-shadow(0 8px 16px rgba(16, 185, 129, 0.25))",
-                paddingTop: "0.15em",
-                paddingBottom: "0.15em"
+                paddingTop: "0.19em",
+                paddingBottom: "0.19em"
               }}
             >
               actually scale

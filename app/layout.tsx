@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
+import Navbar2 from "@/components/Navbar2";
 import AutoLogout from "@/components/AutoLogout";
 
 const inter = Inter({
@@ -45,6 +46,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-slate-50 text-slate-900">
         <AutoLogout />
         <Navbar />
+        <Navbar2 />
         {children}
         <Toaster position="top-right" richColors />
       </body>

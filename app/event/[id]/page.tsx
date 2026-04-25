@@ -32,7 +32,7 @@ export default function PublicEventPage() {
   const [phoneValue, setPhoneValue] = useState("");
 
   const nameHints = useMemo(
-    () => ["John Doe", "Joe Parker", "Willium Smith"],
+    () => ["John Doe", "Joe Parker", "William Smith"],
     [],
   );
   const emailHints = useMemo(
